@@ -1,0 +1,156 @@
+#include "son_tmp_flash.h"
+#include "../../../lib/device/mt25q.h"
+#include "../../../lib/tool/calc_tools.h"
+// #include "../../../lib/communication/typedef_content.h"
+
+extern void subsector_4kByte_erase(Flash flash_stream, unsigned int32 erase_address);
+
+// ============================================================================
+// グローバル変数の実体定義
+// ※各 mission_id 定数 (0x01等) はシステムの定義に合わせて調整してください
+// ============================================================================
+Flash_t piclog_data = {0x01, 0, 0, 0, 0};
+Flash_t environment_data = {0x02, 0, 0, 0, 0};
+Flash_t iv_header = {0x03, 0, 0, 0, 0};
+Flash_t iv_data = {0x04, 0, 0, 0, 0};
+
+void misf_init()
+{
+    fprintf(PC, "MISSION FLASH Initialize\r\n");
+
+    // CSピンの初期化（Highで非選択）
+    output_high(MIS_FM_CS);
+    output_high(SMF_CS);
+    delay_ms(100);
+
+    // デバイスの接続確認
+    if (is_connect(mis_fm))
+    {
+        fprintf(PC, "\t[MIS FM] Connected\r\n");
+    }
+    else
+    {
+        fprintf(PC, "\t[MIS FM] Not Connected\r\n");
+    }
+
+    if (is_connect(smf))
+    {
+        fprintf(PC, "\t[SMF] Connected\r\n");
+    }
+    else
+    {
+        fprintf(PC, "\t[SMF] Not Connected\r\n");
+    }
+
+    // --- カウンタテーブルの復元 ---
+    FlashData_t flash_data;
+    memset(flash_data.bytes, 0, PACKET_SIZE);
+
+    // アドレス 0x00000000 から 64Byte を読み出す
+    read_data_bytes(mis_fm, MISF_CIGS_DATA_TABLE_START, flash_data.bytes, PACKET_SIZE);
+
+    // 読み込んだデータが未フォーマット(0xFF)でないかを簡易チェック
+    if (flash_data.packet.payload.logdata.piclog.mission_id != 0xFF)
+    {
+        piclog_data = flash_data.packet.payload.logdata.piclog;
+        environment_data = flash_data.packet.payload.logdata.environment;
+        iv_header = flash_data.packet.payload.logdata.iv_header;
+        iv_data = flash_data.packet.payload.logdata.iv_data;
+        fprintf(PC, "\tData table loaded from Flash.\r\n");
+    }
+    else
+    {
+        // 真っ白な場合はゼロリセットを維持する
+        fprintf(PC, "\tData table is empty. Initialized to zero.\r\n");
+    }
+
+    fprintf(PC, "\tComplete\r\n");
+}
+
+FlashData_t make_flash_data_table()
+{
+    FlashData_t flash_data;
+    memset(flash_data.bytes, 0, PACKET_SIZE);
+
+    flash_data.packet.payload.logdata.piclog = piclog_data;
+    flash_data.packet.payload.logdata.environment = environment_data;
+    flash_data.packet.payload.logdata.iv_header = iv_header;
+    flash_data.packet.payload.logdata.iv_data = iv_data;
+
+    flash_data.packet.crc = calc_crc8(flash_data.packet.payload.reserve, PACKET_SIZE - 1);
+
+    return flash_data;
+}
+
+void write_misf_address_area()
+{
+    FlashData_t flash_data = make_flash_data_table();
+
+    // 最初のサブセクタ(4KB)を消去してからテーブルを書き込む
+    subsector_4kByte_erase(mis_fm, MISF_CIGS_DATA_TABLE_START);
+    write_data_bytes(mis_fm, MISF_CIGS_DATA_TABLE_START, flash_data.bytes, PACKET_SIZE);
+
+    #ifdef MT25Q_DEBUG
+    fprintf(PC, "Address Area Updated\r\n");
+    #endif
+}
+
+MisfStatusStruct get_misf_status_struct(uint8_t mission_id)
+{
+    MisfStatusStruct mis_struct = {0, 0};
+
+    // ※定数 (CIGS_PICLOG_DATA 等) は外部共通ヘッダに依存
+    if (mission_id == CIGS_PICLOG_DATA)
+    {
+        mis_struct.start_address = MISF_CIGS_PICLOG_START;
+        mis_struct.end_address   = MISF_CIGS_PICLOG_END;
+    }
+    else if (mission_id == CIGS_ENVIRO_DATA)
+    {
+        mis_struct.start_address = MISF_CIGS_ENVIRO_START;
+        mis_struct.end_address   = MISF_CIGS_ENVIRO_END;
+    }
+    else if (mission_id == CIGS_IV_DATA)
+    {
+        mis_struct.start_address = MISF_CIGS_IV_DATA_START;
+        mis_struct.end_address   = MISF_CIGS_IV_DATA_END;
+    }
+    return mis_struct;
+}
+
+MisfWriteStruct get_misf_write_struct(uint8_t mission_id)
+{
+    MisfWriteStruct mis_write_struct = {0, 0};
+
+    if (mission_id == CIGS_DATA_TABLE)
+    {
+        mis_write_struct.start_address = MISF_CIGS_DATA_TABLE_START;
+        mis_write_struct.size = MISF_CIGS_DATA_TABLE_SIZE;
+    }
+    else if (mission_id == CIGS_PICLOG_DATA)
+    {
+        mis_write_struct.start_address = MISF_CIGS_PICLOG_START + piclog_data.used_counter - piclog_data.uncopied_counter;
+        mis_write_struct.size = piclog_data.uncopied_counter;
+    }
+    else if (mission_id == CIGS_ENVIRO_DATA)
+    {
+        mis_write_struct.start_address = MISF_CIGS_ENVIRO_START + environment_data.used_counter - environment_data.uncopied_counter;
+        mis_write_struct.size = environment_data.uncopied_counter;
+    }
+    else if (mission_id == CIGS_IV_DATA)
+    {
+        mis_write_struct.start_address = MISF_CIGS_IV_DATA_START + iv_data.used_counter - iv_data.uncopied_counter;
+        mis_write_struct.size = iv_data.uncopied_counter;
+    }
+
+    return mis_write_struct;
+}
+
+void print_flash_status()
+{
+    fprintf(PC, "--- Flash Status ---\r\n");
+    fprintf(PC, "PICLOG  Used: %lu, Uncopied: %lu\r\n", piclog_data.used_counter, piclog_data.uncopied_counter);
+    fprintf(PC, "ENVIRO  Used: %lu, Uncopied: %lu\r\n", environment_data.used_counter, environment_data.uncopied_counter);
+    fprintf(PC, "IV DATA Used: %lu, Uncopied: %lu\r\n", iv_data.used_counter, iv_data.uncopied_counter);
+    fprintf(PC, "--------------------\r\n");
+}

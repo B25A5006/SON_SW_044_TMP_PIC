@@ -18,7 +18,7 @@ int1 is_use_smf_req_in_mission = 0;
 
 void cigs_system_init(void)
 {
-    fprintf(PC, "CIGS System Initialize Start\r\n");
+    fprintf(PC, "TMP System Initialize Start\r\n");
 
     disable_interrupts(GLOBAL);
 
@@ -30,7 +30,7 @@ void cigs_system_init(void)
 
     piclog_make(0x00, 0x00); // PICLOG_STARTUP
 
-    fprintf(PC, "CIGS System Initialize Complete\r\n");
+    fprintf(PC, "TMP System Initialize Complete\r\n");
 }
 
 static void process_boss_command(uint8_t cmd)
@@ -75,16 +75,18 @@ static void process_boss_command(uint8_t cmd)
 }
 
 // 変更: 解析済みのコマンドを引数として受け取る
-void execute_mission_command(Command* cmd)
+int1 execute_command(Command* cmd)
 {
     uint8_t frame_id = cmd->frame_id;
 
-    // 1. コマンドを受理したことをBOSS(シミュレータ)に知らせる
+    // コマンドを受理したことをBOSS(シミュレータ)に知らせる (ACKを返す)
     transmit_ack();
 
-    // 2. コマンド受信ログを記録 (0x10 は仮のコマンド受信イベントID)
+    // コマンド受信ログを記録
     piclog_make(0x10, frame_id);
 
-    // 3. コマンドに応じた処理(計測開始など)へ分岐
+    // コマンドに応じた処理へ分岐
     process_boss_command(frame_id);
+
+    return TRUE; // コマンドが正常に処理されたことを示す
 }

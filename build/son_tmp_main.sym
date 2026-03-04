@@ -54,7 +54,7 @@
 156     MAIN.timeout_ms
 157     MAIN.i
 158-163 MAIN.recieve_cmd
-164-165 execute_mission_command.cmd
+164-165 execute_command.cmd
 164     @PRINTF_D_950.P1
 164-165 clear_receive_signal.receive_signal
 164-1A3 misf_init.flash_data
@@ -62,7 +62,7 @@
 165     @PRINTF_D_950.P1
 165     MAIN.@SCRATCH2
 166-167 clear_receive_signal.receive_signal_size
-166     execute_mission_command.frame_id
+166     execute_command.frame_id
 166     MAIN.@SCRATCH3
 166     @PRINTF_D_950.@SCRATCH1
 167     transmit_command.frame_id
@@ -321,18 +321,18 @@ F4F     CCP_2
 F4F     CCP_2_LOW
 F50     CCP_2_HIGH
 F83     PSP_DATA
-FBA     CCP_1
 FBA     CCP_1_LOW
+FBA     CCP_1
 FBB     CCP_1_HIGH
 FC4.0   C1OUT
 FC4.1   C2OUT
 FC4.2   C3OUT
 FE1-FE2 @WRITE_PACKED_MEMORY.P1
 FE1-FE2 @READ_PACKED_MEMORY.P2
-FE9-FEA @MEMSET.P1
-FE9-FEA @WRITE_PACKED_MEMORY.P2
-FE9-FEA @READ_PACKED_MEMORY.P3
-FE9-FEA @WRITE_PROGRAM_MEMORY.P4
+FE9-FEA @WRITE_PACKED_MEMORY.P1
+FE9-FEA @MEMSET.P2
+FE9-FEA @WRITE_PROGRAM_MEMORY.P3
+FE9-FEA @READ_PACKED_MEMORY.P4
 FE9-FEA @READ_PROGRAM_MEMORY.P5
 FF6-FF8 @READ_PROGRAM_MEMORY.P1
 FF6-FF8 @WRITE_PROGRAM_MEMORY.P2
@@ -394,96 +394,95 @@ ROM Allocation:
 00069E  @const1676.call
 0006C2  @const1677.call
 0006DA  @const1678.call
-0006FA  @const1679.call
-00071C  @const1682.call
-000738  @const1683.call
-000752  @const1685.call
-000774  @const1690.call
-00078C  @const1691.call
-0007B0  @const1692.call
-0007D0  @const1693.call
-0007F0  @const1694.call
-00080E  @const1695.call
-000838  @const1699.call
-00087E  @const1700.call
-000898  @const1701.call
-0008B4  @const1702.call
-0008BE  @const1703.call
-0008C8  @const1707.call
-0008EE  @const1708.call
-00090E  @const1711.call
-000922  @const1718.call
-000954  @const1719.call
-000976  @const1720.call
-0009A4  @const1721.call
-0009E6  @const1723.call
-0009F2  @delay_ms1
-000A20  @PUTCHAR_1_
-000A72  @PSTRINGC_950
-000AA2  @PSTRINGCN_950
-000AD8  temp_io_init
-000B1E  io_init
-000B76  setup_uart_to_boss
-000B9A  setup_timer
-000BDC  @WRITEBITA
-000C30  @SPI_XFER_1
-000C90  @SPI_XFER_2
-000CF0  spi_xfer_and_read_select_stream
-000F24  is_connect
-000FEC  @MEMSET
-001010  read_data_bytes
-001228  misf_init
-0013D8  get_current_sec
-0013EA  @PRINTF_X_950
-00145A  spi_xfer_select_stream
-00154A  spi_xfer_two_datas_select_stream
-0016C6  status_register
-001766  write_data_bytes
-001AEA  calc_crc8
-001B56  make_flash_data_table
-001C06  subsector_4kByte_erase
-001F60  write_misf_address_area
-001FD6  piclog_make
-00217A  @GETCH_BIU_2
-0021A0  @DIV88
-0021E8  @PRINTF_D_950
-0022FA  trim_receive_signal_header
-0023A2  get_content_size
-00245E  check_crc
-002548  check_device_id
-002602  make_receive_command
-0027FC  clear_receive_signal
-00283A  @PUTCHARI_BIU_2
-00284A  transmit
-002900  transmit_command
-002996  transmit_ack
-0029AC  @PRINTF_U_950
-002A56  switch_channel
-002A96  read_adc_ltc2452
-002AF0  read_adc_internal
-002B10  execute_temp_measurement
-002DB2  execute_measurement
-0030F6  execute_mission_sequence
-0031C0  @DIV3232
-00329A  @PRINTF_L32U_950
-00339C  cigs_smf_prepare
-003558  prepare_smf_transfer
-00357E  cigs_smf_copy
-00375E  execute_smf_transfer
-003784  cigs_smf_permit
-0037F8  permit_smf_transfer
-003832  process_boss_command
-00391A  execute_mission_command
-00394A  @cinit1
-00394A  MAIN
-0039E6  @cinit2
+0006F8  @const1679.call
+00071A  @const1682.call
+000736  @const1683.call
+000750  @const1685.call
+000772  @const1690.call
+00078A  @const1691.call
+0007AE  @const1692.call
+0007CE  @const1693.call
+0007EE  @const1694.call
+00080C  @const1695.call
+000836  @const1699.call
+00087C  @const1700.call
+000896  @const1701.call
+0008B2  @const1702.call
+0008BC  @const1703.call
+0008C6  @const1707.call
+0008EC  @const1708.call
+00090C  @const1711.call
+000920  @const1718.call
+000952  @const1719.call
+000974  @const1720.call
+0009B6  @const1722.call
+0009C2  @delay_ms1
+0009F0  @PUTCHAR_1_
+000A42  @PSTRINGC_950
+000A72  @PSTRINGCN_950
+000AA8  temp_io_init
+000AEE  io_init
+000B46  setup_uart_to_boss
+000B6A  setup_timer
+000BAC  @WRITEBITA
+000C00  @SPI_XFER_1
+000C60  @SPI_XFER_2
+000CC0  spi_xfer_and_read_select_stream
+000EF4  is_connect
+000FBC  @MEMSET
+000FE0  read_data_bytes
+0011F8  misf_init
+0013A8  get_current_sec
+0013BA  @PRINTF_X_950
+00142A  spi_xfer_select_stream
+00151A  spi_xfer_two_datas_select_stream
+001696  status_register
+001736  write_data_bytes
+001ABA  calc_crc8
+001B26  make_flash_data_table
+001BD6  subsector_4kByte_erase
+001F30  write_misf_address_area
+001FA6  piclog_make
+00214A  @GETCH_BIU_2
+002170  @DIV88
+0021B8  @PRINTF_D_950
+0022CA  trim_receive_signal_header
+002372  get_content_size
+00242E  check_crc
+002518  check_device_id
+0025D2  make_receive_command
+0027CC  clear_receive_signal
+00280A  @PUTCHARI_BIU_2
+00281A  transmit
+0028D0  transmit_command
+002966  transmit_ack
+00297C  @PRINTF_U_950
+002A26  switch_channel
+002A66  read_adc_ltc2452
+002AC0  read_adc_internal
+002AE0  execute_temp_measurement
+002D82  execute_measurement
+0030C6  execute_mission_sequence
+003190  @DIV3232
+00326A  @PRINTF_L32U_950
+00336C  cigs_smf_prepare
+003528  prepare_smf_transfer
+00354E  cigs_smf_copy
+00372E  execute_smf_transfer
+003754  cigs_smf_permit
+0037C8  permit_smf_transfer
+003802  process_boss_command
+0038EA  execute_command
+00391E  MAIN
+00391E  @cinit1
+0039BA  @cinit2
 0135  NEXT
 
 Project Directory:
     C:\Users\rice_\Chiba Institute of Technology\6号機 - ドキュメント\TMP_MIS\02_Software\SON_SW_044_TMP_PIC\
 
 Project Files:
-    son_tmp_main.c                                          [04-3-26 13:46  CRC=BFCDE02F]
+    son_tmp_main.c                                          [04-3-26 14:22  CRC=0BFA7A43]
     cigs\system\son_tmp_main.h                              [03-3-26 15:06  CRC=99F52064]
     cigs\system\son_tmp_config.h                            [04-3-26 12:22  CRC=BC7BC048]
     ..\..\..\..\..\..\..\Program Files (x86)\PICC\Devices\18F67J94.h [13-5-21 13:54  CRC=CB5C8DE4]
@@ -508,7 +507,7 @@ Project Files:
     ..\..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\stddef.h [30-1-19 12:26  CRC=897CEC6C]
     ..\..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\ctype.h [03-1-08 15:55  CRC=2D1F019F]
     cigs\core\logging\son_tmp_piclog.h                      [03-3-26 15:03  CRC=5BBE69D3]
-    cigs\application\mission\son_tmp_excute_mission.h       [03-3-26 16:24  CRC=346AB29F]
+    cigs\application\mission\son_tmp_excute_mission.h       [04-3-26 14:21  CRC=346AB29F]
     cigs\application\mission\son_tmp_mode_mission.h         [03-3-26 15:06  CRC=2EF3EE1B]
     cigs\application\mission\son_tmp_mode_flash.h           [03-3-26 15:03  CRC=F8337AE4]
     cigs\hardware\mcu\src\timer.c                           [03-3-26 12:10  CRC=29FC7B77]
@@ -525,13 +524,13 @@ Project Files:
     cigs\core\storage\son_tmp_smf.c                         [03-3-26 15:03  CRC=71396F7D]
     cigs\core\storage\son_tmp_smf.h                         [03-3-26 15:03  CRC=E5BCF121]
     cigs\core\storage\son_tmp_flash.c                       [03-3-26 15:03  CRC=A77BE60C]
-    cigs\application\mission\son_tmp_excute_mission.c       [03-3-26 16:24  CRC=0ECE73DE]
+    cigs\application\mission\son_tmp_excute_mission.c       [04-3-26 14:22  CRC=32CA7674]
     cigs\application\mission\son_tmp_mode_mission.c         [03-3-26 15:06  CRC=F3E55B55]
     cigs\application\mission\son_tmp_mode_flash.c           [03-3-26 15:03  CRC=BFC8E189]
 
-Source signature=9A4362E0
+Source signature=0A6BFF8A
 Program memory checksum=0000
-Hex file CRC=7D92
+Hex file CRC=B086
 
 Units:
     C:\Users\rice_\Chiba Institute of Technology\6号機 - ドキュメント\TMP_MIS\02_Software\SON_SW_044_TMP_PIC\son_tmp_main (main)
@@ -546,13 +545,13 @@ Compiler Settings:
     Compile Mode:   CCS5
 
 Output Files:
-    XREF file:   son_tmp_main.xsym
-    Errors:      son_tmp_main.err
-    Ext Symbols: son_tmp_main.esym
-    INHX32:      son_tmp_main.hex
-    Symbols:     son_tmp_main.sym
-    List:        son_tmp_main.lst
-    Debug/COFF:  son_tmp_main.cof
+    XREF file:   build\son_tmp_main.xsym
+    Errors:      build\son_tmp_main.err
+    Ext Symbols: build\son_tmp_main.esym
+    INHX32:      build\son_tmp_main.hex
+    Symbols:     build\son_tmp_main.sym
+    List:        build\son_tmp_main.lst
+    Debug/COFF:  build\son_tmp_main.cof
     Project:     son_tmp_main.ccspjt
-    Call Tree:   son_tmp_main.tre
-    Statistics:  son_tmp_main.STA
+    Call Tree:   build\son_tmp_main.tre
+    Statistics:  build\son_tmp_main.STA

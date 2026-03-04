@@ -1,9 +1,9 @@
-D G "__PCH__" 0 154 ""5.104""
-D G "__DEVICE__" 0 154 "6794"
-D G "__DATE__" 0 154 ""4-Mar-26""
-D G "__TIME__" 0 154 ""13:46:43""
-D G "_UNICODE" 0 154 ""?""
-D G "__EVAL" 0 154 ""?""
+D G "__PCH__" 0 171 ""5.104""
+D G "__DEVICE__" 0 171 "6794"
+D G "__DATE__" 0 171 ""4-Mar-26""
+D G "__TIME__" 0 171 ""14:23:00""
+D G "_UNICODE" 0 171 ""?""
+D G "__EVAL" 0 171 ""?""
 D G "son_tmp_MAIN_H" 1 2 ""
 D G "son_tmp_CONFIG_H" 2 2 ""
 D G "SELF_DEVICE_ID" 2 4 "CIGS_PIC"
@@ -2775,13 +2775,13 @@ C L "piclog_make" 2 101 1 "FUNCTION"
 C L "piclog_make" 25 12 1 "FUNCTION"
 F N "cigs_system_init" 25 14 ""
 f G "cigs_system_init" 25 14 "void()" `1448  "バッファを直接読むのではなく、解析済みのCommandを引数で受け取るように変更"
-F N "execute_mission_command" 25 17 ""
+F N "execute_command" 25 17 ""
 V L "cmd" 25 17 " *" `1450 
-f G "execute_mission_command" 25 17 "void( * cmd)" `1449  "SON_TMP_EXCUTE_MISSION_H"
+f G "execute_command" 25 17 "int8( * cmd)" `1449  "SON_TMP_EXCUTE_MISSION_H"
 D G "son_tmp_MODE_MISSION_H" 26 2 ""
-C L "execute_mission_command" 5 2 12 "FUNCTION"
-C L "execute_mission_command" 2 101 1 "FUNCTION"
-C L "execute_mission_command" 26 8 3 "FUNCTION"
+C L "execute_command" 5 2 12 "FUNCTION"
+C L "execute_command" 2 101 1 "FUNCTION"
+C L "execute_command" 26 8 3 "FUNCTION"
 F N "execute_mission_sequence" 26 13 ""
 f G "execute_mission_sequence" 26 13 "void()" `1451  "son_tmp_MODE_MISSION_H"
 D G "son_tmp_MODE_FLASH_H" 27 2 ""
@@ -3341,14 +3341,15 @@ C L "cigs_system_init" 42 10 1 "FUNCTION"
 F N "process_boss_command" 42 36 ""
 V L "cmd" 42 36 "uint8_t" `1681 
 F G "process_boss_command" 42 37 "void(uint8_t cmd)" `1680 
-C L "execute_mission_command" 42 10 1 "FUNCTION"
-F N "execute_mission_command" 42 78 ""
+C L "execute_command" 42 10 1 "FUNCTION"
+F N "execute_command" 42 78 ""
 V L "cmd" 42 78 " *" `1685 
-F G "execute_mission_command" 42 79 "void( * cmd)" `1449 
+F G "execute_command" 42 79 "int8( * cmd)" `1449 
 V L "frame_id" 42 80 "uint8_t" `1684 
-C L "execute_mission_command" 42 10 1 "FUNCTION"
-C L "execute_mission_command" 42 10 1 "FUNCTION"
-C L "execute_mission_command" 42 10 1 "FUNCTION"
+C L "execute_command" 42 10 1 "FUNCTION"
+C L "execute_command" 42 10 1 "FUNCTION"
+C L "execute_command" 42 10 1 "FUNCTION"
+C L "execute_command" 42 10 1 "FUNCTION"
 C L "execute_mission_sequence" 26 15 1 "FUNCTION"
 C L "execute_mission_sequence" 17 27 1 "FUNCTION"
 C L "execute_mission_sequence" 24 40 1 "FUNCTION"
@@ -3400,7 +3401,10 @@ C L "MAIN" 0 11 1 "FUNCTION"
 C L "MAIN" 0 11 1 "FUNCTION"
 V L "i" 0 59 "int8" `1715 
 C L "MAIN" 0 11 1 "FUNCTION"
-V L "recieve_cmd" 0 70 "Command" `1717 
+C L "MAIN" 0 11 1 "FUNCTION"
+V L "recieve_cmd" 0 71 "Command" `1717 
+C L "MAIN" 0 11 1 "FUNCTION"
+C L "MAIN" 0 11 1 "FUNCTION"
 F B "reset_cpu" 0 0
 F B "abs" 1 0
 F B "sleep" 0 1

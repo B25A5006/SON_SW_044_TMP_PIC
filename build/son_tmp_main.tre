@@ -1,5 +1,5 @@
 ÀÄson_tmp_main
-   ÃÄMAIN  0/1764  Ram=24
+   ÃÄMAIN  0/1734  Ram=24
    ³  ÃÄ@cinit1  (Inline)  Ram=0
    ³  ÃÄ@cinit2  (Inline)  Ram=0
    ³  ÃÄ@delay_ms1  0/46  Ram=1
@@ -252,7 +252,7 @@
    ³  ³  ÀÄ*
    ³  ÃÄ@PUTCHAR_1_  0/82  Ram=1
    ³  ÃÄ@PUTCHAR_1_  0/82  Ram=1
-   ³  ÃÄexecute_mission_command  0/48  Ram=3
+   ³  ÃÄexecute_command  0/52  Ram=3
    ³  ³  ÃÄtransmit_ack  0/22  Ram=0
    ³  ³  ³  ÀÄtransmit_command  0/150  Ram=25
    ³  ³  ³     ÃÄcalc_crc8  0/108  Ram=4
@@ -403,8 +403,6 @@
    ³  ³     ³  ÀÄ*
    ³  ³     ÃÄ@PUTCHAR_1_  0/82  Ram=1
    ³  ³     ÀÄ@PUTCHAR_1_  0/82  Ram=1
-   ³  ÃÄ@PSTRINGC_950  0/48  Ram=3
-   ³  ³  ÀÄ*
    ³  ÃÄ@PSTRINGC_950  0/48  Ram=3
    ³  ³  ÀÄ*
    ³  ÃÄ@PSTRINGC_950  0/48  Ram=3

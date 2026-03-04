@@ -33,7 +33,11 @@
     // UART 通信設定
     // ------------------------------------------
     #use rs232(baud=9600, parity=N, xmit=PIN_G0, bits=8, stream=PC, FORCE_SW, ERRORS)
-    #use rs232(baud=9600, parity=N, xmit=PIN_D1, rcv=PIN_D0, bits=8, stream=BOSS, ERRORS)
+
+    // BOSS側: D1/D0ピンにハードウェアUART3を割り当てて使用する
+    #pin_select TX3=PIN_D1
+    #pin_select RX3=PIN_D0
+    #use rs232(baud=9600, parity=N, UART3, bits=8, stream=BOSS, ERRORS)
 
     // ------------------------------------------
     // SPI 通信設定

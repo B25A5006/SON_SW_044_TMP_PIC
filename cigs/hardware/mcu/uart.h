@@ -14,7 +14,7 @@ extern volatile int8 boss_receive_buffer_size;
 
 // _______________ functions ___________
 
-#INT_RDA
+#INT_RDA3
 static void RDA_isr(void);
 
 void setup_uart_to_boss();
